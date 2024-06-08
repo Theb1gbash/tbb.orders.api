@@ -1,0 +1,11 @@
+USE [tbb.orders]
+GO
+
+-- Insert sample data into Tickets table
+INSERT INTO Tickets (OrderId, EventName, EventDate, TicketStatus, QRCode, Barcode)
+VALUES 
+(1, 'Music Concert', '2024-06-30', 'Active', NULL, NULL),
+(1, 'Theater Show', '2024-07-15', 'Active', NULL, NULL),
+(2, 'Sports Event', '2024-08-20', 'Pending', NULL, NULL),
+(3, 'Art Exhibition', '2024-09-10', 'Cancelled', NULL, NULL),
+(4, 'Science Fair', '2024-10-05', 'Active', NULL, NULL);
