@@ -65,5 +65,69 @@ namespace tbb.orders.api.Controllers
             var refundId = await _orderRepository.ProcessRefund(refund);
             return Ok(refundId);
         }
+
+        
+        // New ticket-related endpoints
+
+        [HttpGet("{orderId}/tickets")]
+        public async Task<IActionResult> GetTicketsByOrderId(int orderId)
+        {
+            var tickets = await _orderRepository.GetTicketsByOrderIdAsync(orderId);
+            if (tickets == null || !tickets.Any())
+            {
+                return NotFound("No tickets found for this order.");
+            }
+            return Ok(tickets);
+        }
+
+        [HttpGet("tickets/{ticketId}")]
+        public async Task<IActionResult> GetTicketById(int ticketId)
+        {
+            var ticket = await _orderRepository.GetTicketByIdAsync(ticketId);
+            if (ticket == null)
+            {
+                return NotFound("Ticket not found.");
+            }
+            return Ok(ticket);
+        }
+
+        [HttpPost("{orderId}/tickets")]
+        public async Task<IActionResult> CreateTicket(int orderId, [FromBody] Ticket ticket)
+        {
+            if (ticket == null || orderId != ticket.OrderId)
+            {
+                return BadRequest("Invalid ticket data.");
+            }
+
+            var createdTicketId = await _orderRepository.CreateTicketAsync(ticket);
+            return CreatedAtAction(nameof(GetTicketById), new { ticketId = createdTicketId }, ticket);
+        }
+
+        [HttpPut("tickets/{ticketId}")]
+        public async Task<IActionResult> UpdateTicket(int ticketId, [FromBody] Ticket ticket)
+        {
+            if (ticket == null || ticketId != ticket.TicketId)
+            {
+                return BadRequest("Invalid ticket data.");
+            }
+
+            var updated = await _orderRepository.UpdateTicketAsync(ticket);
+            if (!updated)
+            {
+                return NotFound("Ticket not found.");
+            }
+            return NoContent();
+        }
+
+        [HttpDelete("tickets/{ticketId}")]
+        public async Task<IActionResult> DeleteTicket(int ticketId)
+        {
+            var deleted = await _orderRepository.DeleteTicketAsync(ticketId);
+            if (!deleted)
+            {
+                return NotFound("Ticket not found.");
+            }
+            return NoContent();
+        }
     }
 }
