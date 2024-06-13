@@ -1,0 +1,25 @@
+USE [tbb.orders]
+GO
+
+/****** Object:  Table [dbo].[Tickets]    Script Date: 2024-06-06 ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [dbo].[Tickets] (
+    TicketId INT IDENTITY(1,1) NOT NULL,
+    OrderId INT NOT NULL,
+    EventName NVARCHAR(255) NOT NULL,
+    EventDate DATETIME NOT NULL,
+    TicketStatus NVARCHAR(50) NOT NULL,
+    QRCode VARBINARY(MAX) NULL,
+    Barcode VARBINARY(MAX) NULL,
+    CONSTRAINT PK_Tickets PRIMARY KEY CLUSTERED (TicketId ASC)
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+GO
+
+ALTER TABLE [dbo].[Tickets] WITH CHECK ADD CONSTRAINT FK_Tickets_Orders FOREIGN KEY (OrderId)
+REFERENCES [dbo].[Orders] (OrderId)
+GO
